@@ -10,6 +10,7 @@
   },
   "formatters": {
     "jsonc": ["prettier"],
-    "json": ["prettier"]
+    "json": ["prettier"],
+    "html": ["prettier"]
   }
 }
