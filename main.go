@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -39,5 +38,11 @@ func main() {
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to home page\n")
+	var version string
+
+	if err := db.QueryRow("SELECT VERSION()").Scan(&version); err != nil {
+		log.Fatalf("Failed to query database version: %v", err)
+	}
+
+	w.Write([]byte("Database version:" + version))
 }
