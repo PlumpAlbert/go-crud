@@ -1,0 +1,28 @@
+{{ define "base" }}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>HTMX with Go - ToDo App</title>
+	<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-neutral-900 text-neutral-100">
+
+	<div class="grid grid-cols-2 gap-4">
+		<div class="flex flex-col gap-4">
+			<h2 class='text-4xl font-semibold'>Task list</h2>
+		</div>
+
+		<div class="flex flex-col gap-4">
+			<h2 class='text-4xl font-semibold'>Task Form</h2>
+		</div>
+	</div>
+
+</body>
+
+</html>
+{{ end }}

@@ -14,7 +14,7 @@ var db *sql.DB
 var tmpl *template.Template // For later use when introducing HTML rendering
 
 func init() {
-	tmpl = template.Must(template.ParseGlob("templates/*.gotmpl"))
+	tmpl = template.Must(template.ParseGlob("templates/*.html"))
 }
 
 func initDB() {
@@ -44,14 +44,7 @@ func main() {
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	var version string
-
-	if err := db.QueryRow("SELECT VERSION()").Scan(&version); err != nil {
-		log.Fatalf("Failed to query database version: %v", err)
-	}
-
-	err := tmpl.ExecuteTemplate(w, "home.gohtml", version)
-	if err != nil {
+	if err := tmpl.ExecuteTemplate(w, "base", nil); err != nil {
 		http.Error(w, "Error loading template: "+err.Error(), http.StatusInternalServerError) // use http.StatusInternalServerError to signal an error
 	}
 }
