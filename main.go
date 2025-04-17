@@ -49,6 +49,9 @@ func main() {
 	// Get tasks:
 	gRouter.HandleFunc("/tasks", fetchTasks).Methods("GET")
 
+	// Fetch addTaskForm
+	gRouter.HandleFunc("/getnewtaskform", getAddTaskForm).Methods("GET")
+
 	http.ListenAndServe(":8080", gRouter)
 }
 
@@ -69,6 +72,10 @@ func fetchTasks(w http.ResponseWriter, r *http.Request) {
 	if err := tmpl.ExecuteTemplate(w, "todoList", tasks); err != nil {
 		http.Error(w, "Error loading template: "+err.Error(), http.StatusInternalServerError)
 	}
+}
+
+func getAddTaskForm(w http.ResponseWriter, r *http.Request) {
+	tmpl.ExecuteTemplate(w, "addTaskForm", nil)
 }
 
 func GetTasks(dbPointer *sql.DB) ([]Task, error) {
