@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"html/template"
 	"log"
 	"net/http"
 
@@ -10,6 +11,11 @@ import (
 )
 
 var db *sql.DB
+var tmpl *template.Template // For later use when introducing HTML rendering
+
+func init() {
+	tmpl = template.Must(template.ParseGlob("templates/*.gotmpl"))
+}
 
 func initDB() {
 	var err error
@@ -44,5 +50,8 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Failed to query database version: %v", err)
 	}
 
-	w.Write([]byte("Database version:" + version))
+	err := tmpl.ExecuteTemplate(w, "home.gohtml", version)
+	if err != nil {
+		http.Error(w, "Error loading template: "+err.Error(), http.StatusInternalServerError) // use http.StatusInternalServerError to signal an error
+	}
 }

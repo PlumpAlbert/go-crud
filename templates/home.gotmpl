@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Homepage</title>
+</head>
+
+<body>
+	{{ template "headerFragment" }}
+
+	<main>
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+		Sed non dui vitae mi gravida cursus. Fusce ac ligula
+		quis augue dictum semper id nec turpis.
+	</main>
+
+	<footer>
+		<p>
+			{{ template "footerFragment" }}
+		</p>
+
+		<p>VERSION: {{.}}</p>
+	</footer>
+</body>
+
+</html>
