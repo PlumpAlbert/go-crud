@@ -1,0 +1,9 @@
+{{ define "todoList" }}
+<ul class="max-w-md space-y-1 list-disc list-inside text-gray-500 dark:text-gray-400">
+	{{ range . }}
+	<li>
+		{{ .Task }}
+	</li>
+	{{ end }}
+</ul>
+{{ end }}
