@@ -49,19 +49,13 @@ func main() {
 	// Get tasks:
 	gRouter.HandleFunc("/tasks", fetchTasks).Methods("GET")
 
-	// Fetch addTaskForm
-	gRouter.HandleFunc("/getnewtaskform", getAddTaskForm).Methods("GET")
+	// Fetch fragments
+	gRouter.HandleFunc("/fragment/{name}", FragmentHandler).Methods("GET")
 
 	// Add task
 	gRouter.HandleFunc("/tasks", addTask).Methods("POST")
 
 	http.ListenAndServe(":8080", gRouter)
-}
-
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	if err := tmpl.ExecuteTemplate(w, "base", nil); err != nil {
-		http.Error(w, "Error loading template: "+err.Error(), http.StatusInternalServerError) // use http.StatusInternalServerError to signal an error
-	}
 }
 
 func fetchTasks(w http.ResponseWriter, r *http.Request) {
