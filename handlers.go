@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -27,6 +28,20 @@ func FragmentHandler(w http.ResponseWriter, r *http.Request) {
 
 		if err := tmpl.ExecuteTemplate(w, "todoList", tasks); err != nil {
 			http.Error(w, "Error loading template: "+err.Error(), http.StatusInternalServerError)
+		}
+
+	case "updateTaskForm":
+		taskId, _ := strconv.Atoi(r.URL.Query().Get("taskId"))
+		if taskId > 0 {
+			task, err := GetTaskById(db, taskId)
+			if err != nil {
+				log.Fatal("Error while fetching task by id: ", err)
+				http.Error(w, "Error loading template: "+err.Error(), http.StatusInternalServerError)
+			}
+
+			if err = tmpl.ExecuteTemplate(w, params["name"], task); err != nil {
+				http.Error(w, "Error loading template: "+err.Error(), http.StatusInternalServerError)
+			}
 		}
 
 	default:
