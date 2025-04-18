@@ -1,6 +1,9 @@
 package main
 
-import "database/sql"
+import (
+	"database/sql"
+	"fmt"
+)
 
 func GetTasks(dbPointer *sql.DB) ([]Task, error) {
 	query := "SELECT id, task, done FROM tasks;"
@@ -31,4 +34,23 @@ func GetTasks(dbPointer *sql.DB) ([]Task, error) {
 	}
 
 	return tasks, nil
+}
+
+func GetTaskById(dbPonter *sql.DB, id int) (*Task, error) {
+	query := "SELECT id, task, done FROM tasks WHERE id = ?"
+
+	var task Task
+
+	row := db.QueryRow(query, id)
+
+	err := row.Scan(&task.Id, &task.Task, &task.Done)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("task with id %d doesn't exist", id)
+		}
+
+		return nil, err
+	}
+
+	return &task, nil
 }
