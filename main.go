@@ -46,9 +46,6 @@ func main() {
 
 	gRouter.HandleFunc("/", HomeHandler)
 
-	// Get tasks:
-	gRouter.HandleFunc("/tasks", fetchTasks).Methods("GET")
-
 	// Fetch fragments
 	gRouter.HandleFunc("/fragment/{name}", FragmentHandler).Methods("GET")
 
@@ -56,23 +53,6 @@ func main() {
 	gRouter.HandleFunc("/tasks", addTask).Methods("POST")
 
 	http.ListenAndServe(":8080", gRouter)
-}
-
-func fetchTasks(w http.ResponseWriter, r *http.Request) {
-	// Fetch all the tasks from our database
-	tasks, err := GetTasks(db)
-	if err != nil {
-		log.Fatal("Error while fetching tasks: ", err)
-		http.Error(w, "Error while fetching tasks: "+err.Error(), http.StatusInternalServerError)
-	}
-
-	if err := tmpl.ExecuteTemplate(w, "todoList", tasks); err != nil {
-		http.Error(w, "Error loading template: "+err.Error(), http.StatusInternalServerError)
-	}
-}
-
-func getAddTaskForm(w http.ResponseWriter, r *http.Request) {
-	tmpl.ExecuteTemplate(w, "addTaskForm", nil)
 }
 
 func addTask(w http.ResponseWriter, r *http.Request) {
