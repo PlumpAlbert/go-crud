@@ -16,8 +16,9 @@
 
         <button
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-          hx-target="#taskForm"
-          hx-on:click="toggleModal()"
+          hx-target="#modal-content"
+          hx-get="/getnewtaskform"
+          onclick="toggleModal()"
         >
           Add Task
         </button>
@@ -26,25 +27,36 @@
       <div id="taskList" hx-trigger="load" hx-get="/tasks"></div>
     </div>
 
-    {{ template "addTaskForm" }}
+    <div
+      tabindex="-1"
+      id="modal-container"
+      aria-modal="true"
+      role="dialog"
+      class="flex hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-600/40 dark:bg-gray-800/60"
+      onclick="handleClickOutsideForm(event)"
+    >
+      <div class="m-auto relative p-4 w-full max-w-2xl max-h-full">
+        <div
+          id="modal-content"
+          class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700"
+          onclick="event.stopPropagation()"
+        ></div>
+      </div>
+    </div>
 
     <script>
-      const taskForm = document.querySelector("div#taskForm");
+      const modalContainerElem = document.querySelector("div#modal-container");
 
       function toggleModal() {
-        if (taskForm.classList.contains("hidden")) {
-          taskForm.classList.remove("hidden");
+        if (modalContainerElem.classList.contains("hidden")) {
+          modalContainerElem.classList.remove("hidden");
         } else {
-          taskForm.classList.add("hidden");
+          modalContainerElem.classList.add("hidden");
         }
       }
 
       function handleClickOutsideForm(e) {
         e.target.classList.add("hidden");
-      }
-
-      function stopPropagation(e) {
-        e.stopPropagation();
       }
     </script>
   </body>
