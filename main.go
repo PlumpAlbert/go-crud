@@ -50,30 +50,7 @@ func main() {
 	gRouter.HandleFunc("/fragment/{name}", FragmentHandler).Methods("GET")
 
 	// Add task
-	gRouter.HandleFunc("/tasks", addTask).Methods("POST")
+	gRouter.HandleFunc("/tasks", AddTaskHandler).Methods("POST")
 
 	http.ListenAndServe(":8080", gRouter)
-}
-
-func addTask(w http.ResponseWriter, r *http.Request) {
-	// get value associated with "task" form field
-	task := r.FormValue("task")
-
-	query := "INSERT INTO tasks (task) VALUES (?)"
-
-	stmt, err := db.Prepare(query)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer stmt.Close()
-
-	_, err = stmt.Exec(task)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// return a fresh list
-	todos, _ := GetTasks(db)
-	tmpl.ExecuteTemplate(w, "todoList", todos)
 }

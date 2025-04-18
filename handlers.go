@@ -36,3 +36,26 @@ func FragmentHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
+	// get value associated with "task" form field
+	task := r.FormValue("task")
+
+	query := "INSERT INTO tasks (task) VALUES (?)"
+
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(task)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// return a fresh list
+	todos, _ := GetTasks(db)
+	tmpl.ExecuteTemplate(w, "todoList", todos)
+}
