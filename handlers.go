@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -73,4 +75,42 @@ func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 	// return a fresh list
 	todos, _ := GetTasks(db)
 	tmpl.ExecuteTemplate(w, "todoList", todos)
+}
+
+func UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	taskId, err := strconv.Atoi(params["id"])
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
+	title := r.FormValue("task")
+	var done bool
+	switch strings.ToLower(r.FormValue("done")) {
+	case "yes", "on":
+		done = true
+	default:
+		done = false
+	}
+
+	task := Task{
+		taskId, title, done,
+	}
+
+	query := "UPDATE tasks SET task = ?, done = ? WHERE id = ?"
+
+	result, err := db.Exec(query, task.Task, task.Done, task.Id)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if rowsAffected == 0 {
+		fmt.Println("No rows updated")
+	}
+
+	tasks, _ := GetTasks(db)
+
+	tmpl.ExecuteTemplate(w, "todoList", tasks)
 }
