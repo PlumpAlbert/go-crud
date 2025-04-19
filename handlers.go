@@ -114,3 +114,28 @@ func UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.ExecuteTemplate(w, "todoList", tasks)
 }
+
+func DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	taskId, err := strconv.Atoi(params["id"])
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
+	query := "DELETE FROM tasks WHERE id = ?"
+
+	result, err := db.Exec(query, taskId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if rowsAffected == 0 {
+		fmt.Println("No rows deleted")
+	}
+
+	tasks, _ := GetTasks(db)
+
+	tmpl.ExecuteTemplate(w, "todoList", tasks)
+}

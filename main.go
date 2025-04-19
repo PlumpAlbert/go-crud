@@ -55,5 +55,8 @@ func main() {
 	// Update task
 	gRouter.HandleFunc("/tasks/{id}", UpdateTaskHandler).Methods("PUT", "POST")
 
+	// Delete task
+	gRouter.HandleFunc("/tasks/{id}", DeleteTaskHandler).Methods("DELETE")
+
 	http.ListenAndServe(":8080", gRouter)
 }
