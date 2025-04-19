@@ -189,7 +189,8 @@ Build go-crud from the source and intsall dependencies:
 Run the project with:
 
 ```sh
-go run *.go
+go build ./cmd/gocrud
+./gocrud
 ```
 
 ---
