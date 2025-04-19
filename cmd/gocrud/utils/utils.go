@@ -1,11 +1,13 @@
-package main
+package utils
 
 import (
 	"database/sql"
 	"fmt"
+
+	"github.com/plumpalbert/go-crud/pkg/gocrud"
 )
 
-func GetTasks(dbPointer *sql.DB) ([]Task, error) {
+func GetTasks(dbPointer *sql.DB) ([]gocrud.Task, error) {
 	query := "SELECT id, task, done FROM tasks;"
 
 	rows, err := dbPointer.Query(query)
@@ -15,10 +17,10 @@ func GetTasks(dbPointer *sql.DB) ([]Task, error) {
 
 	defer rows.Close()
 
-	var tasks []Task
+	var tasks []gocrud.Task
 
 	for rows.Next() { // Loop over rows in result set
-		var todo Task
+		var todo gocrud.Task
 
 		err = rows.Scan(&todo.Id, &todo.Task, &todo.Done)
 		if err != nil {
@@ -36,12 +38,12 @@ func GetTasks(dbPointer *sql.DB) ([]Task, error) {
 	return tasks, nil
 }
 
-func GetTaskById(dbPonter *sql.DB, id int) (*Task, error) {
+func GetTaskById(dbPonter *sql.DB, id int) (*gocrud.Task, error) {
 	query := "SELECT id, task, done FROM tasks WHERE id = ?"
 
-	var task Task
+	var task gocrud.Task
 
-	row := db.QueryRow(query, id)
+	row := dbPonter.QueryRow(query, id)
 
 	err := row.Scan(&task.Id, &task.Task, &task.Done)
 	if err != nil {
