@@ -61,7 +61,7 @@ func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 	// get value associated with "task" form field
 	task := r.FormValue("task")
 
-	query := "INSERT INTO tasks (task) VALUES (?)"
+	query := "INSERT INTO tasks (task) VALUES ($1)"
 
 	stmt, err := core.Config.Database.Prepare(query)
 	if err != nil {
@@ -101,7 +101,7 @@ func UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
 		Id: taskId, Task: title, Done: done,
 	}
 
-	query := "UPDATE tasks SET task = ?, done = ? WHERE id = ?"
+	query := "UPDATE tasks SET task = $1, done = $2 WHERE id = $3"
 
 	result, err := core.Config.Database.Exec(query, task.Task, task.Done, task.Id)
 	if err != nil {
@@ -126,7 +126,7 @@ func DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	query := "DELETE FROM tasks WHERE id = ?"
+	query := "DELETE FROM tasks WHERE id = $1"
 
 	result, err := core.Config.Database.Exec(query, taskId)
 	if err != nil {

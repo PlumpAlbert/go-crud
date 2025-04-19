@@ -39,7 +39,7 @@ func GetTasks(dbPointer *sql.DB) ([]gocrud.Task, error) {
 }
 
 func GetTaskById(dbPonter *sql.DB, id int) (*gocrud.Task, error) {
-	query := "SELECT id, task, done FROM tasks WHERE id = ?"
+	query := "SELECT id, task, done FROM tasks WHERE id = $1"
 
 	var task gocrud.Task
 

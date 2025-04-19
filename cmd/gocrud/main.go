@@ -1,15 +1,22 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"github.com/plumpalbert/go-crud/cmd/gocrud/handlers"
 	"github.com/plumpalbert/go-crud/internal/core"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Could not load .env file")
+		return
+	}
+
 	config := core.NewConfig()
 	defer config.Database.Close()
 
