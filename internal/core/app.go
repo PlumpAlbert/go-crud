@@ -2,8 +2,10 @@ package core
 
 import (
 	"database/sql"
+	"fmt"
+	_ "github.com/lib/pq"
 	"html/template"
-	"log"
+	"os"
 )
 
 type AppConfig struct {
@@ -14,17 +16,35 @@ type AppConfig struct {
 var Config AppConfig
 
 func initDB() *sql.DB {
-	db, err := sql.Open("mysql", "root:root@(127.0.0.1)/testdb?parseTime=true")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbDatabase := os.Getenv("DB_DATABASE")
+	dbSsl := os.Getenv("DB_SSL")
+
+	dsn := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s",
+		dbHost,
+		dbPort,
+		dbUser,
+		dbPassword,
+		dbDatabase,
+	)
+
+	if dbSsl != "" {
+		dsn += " sslmode=" + dbSsl
+	}
+
+	db, err := sql.Open("postgres", dsn)
 
 	if err != nil {
-		log.Fatal(err)
-		return nil
+		panic(err)
 	}
 
 	// Check DB connection
 	if err = db.Ping(); err != nil {
-		log.Fatal(err)
-		return nil
+		panic(err)
 	}
 
 	return db
