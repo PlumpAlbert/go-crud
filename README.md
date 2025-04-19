@@ -181,7 +181,7 @@ Build go-crud from the source and intsall dependencies:
 3. **Install the dependencies:**
 
 	```sh
-	go install
+	go mod download
 	```
 
 ### Usage
